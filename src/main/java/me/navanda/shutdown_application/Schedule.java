@@ -119,4 +119,8 @@ public class Schedule implements Runnable {
 	public void setOwnThred(Thread scheduleThread) {
 		ownThread = scheduleThread;
 	}
+
+	public void stopThread() {
+		stopFlag = true;
+	}
 }

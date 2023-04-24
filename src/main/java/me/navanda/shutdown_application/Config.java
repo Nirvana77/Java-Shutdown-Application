@@ -23,13 +23,13 @@ public class Config {
 		gameNames = new ArrayList<>();
 
 		// Initialize shutdown times for each day of the week
-		shutdownTimes.put(0, new int[]{23, 0}); // 10pm on Sunday
-		shutdownTimes.put(1, new int[]{22, 0}); // 10pm on Monday
-		shutdownTimes.put(2, new int[]{22, 0}); // 10pm on Tuesday
-		shutdownTimes.put(3, new int[]{22, 0}); // 10pm on Wednesday
-		shutdownTimes.put(4, new int[]{22, 0}); // 11pm on Thursday
-		shutdownTimes.put(5, new int[]{23, 0}); // 11pm on Friday
-		shutdownTimes.put(6, new int[]{23, 0}); // 11pm on Saturday
+		shutdownTimes.put(0, new int[]{23, 0, 1}); // 10pm on Sunday is ON
+		shutdownTimes.put(1, new int[]{22, 0, 1}); // 10pm on Monday is ON
+		shutdownTimes.put(2, new int[]{22, 0, 1}); // 10pm on Tuesday is ON
+		shutdownTimes.put(3, new int[]{22, 0, 1}); // 10pm on Wednesday is ON
+		shutdownTimes.put(4, new int[]{22, 0, 1}); // 11pm on Thursday is ON
+		shutdownTimes.put(5, new int[]{23, 0, 0}); // 11pm on Friday is OFF
+		shutdownTimes.put(6, new int[]{23, 0, 1}); // 11pm on Saturday is ON
 	}
 
 	public static void create() {
@@ -62,4 +62,15 @@ public class Config {
 	}
 
 
+	public int getHour(int day) {
+		return shutdownTimes.get(day)[0];
+	}
+
+	public int getMinute(int day) {
+		return shutdownTimes.get(day)[1];
+	}
+
+	public boolean isShutdownDay(int day) {
+		return shutdownTimes.get(day)[2] == 1;
+	}
 }

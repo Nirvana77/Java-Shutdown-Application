@@ -1,10 +1,12 @@
 package me.navanda.shutdown_application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.*;
 
@@ -23,9 +25,14 @@ public class Application extends javafx.application.Application {
 		Controller controller = fxmlLoader.getController();
 		controller.setApplication(this);
 		controller.setStage(stage);
-		Scene scene = new Scene(root, 320, 240);
-		stage.setTitle("Hello!");
+		Scene scene = new Scene(root, 550, 400);
+		stage.setTitle("Shutdown Times");
 		stage.setScene(scene);
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent event) {
+				schedule.stopThread();
+			}
+		});
 		stage.show();
 	}
 

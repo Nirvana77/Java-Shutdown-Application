@@ -3,6 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 
 <?import javafx.scene.control.Button?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
@@ -11,7 +15,57 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-    <Button text="Stop" onAction="#onStopClick"/>
+    <HBox spacing="5.0">
+        <Label text="Hour"/>
+        <TextField fx:id="hourInput0"/>
+        <Label text="Minute"/>
+        <TextField fx:id="minuteInput0"/>
+        <CheckBox fx:id="dayCheckbox0" text="Monday"/>
+    </HBox>
+    <HBox spacing="5.0">
+        <Label text="Hour"/>
+        <TextField fx:id="hourInput1"/>
+        <Label text="Minute"/>
+        <TextField fx:id="minuteInput1"/>
+        <CheckBox fx:id="dayCheckbox1" text="Tuesday"/>
+    </HBox>
+    <HBox spacing="5.0">
+        <Label text="Hour"/>
+        <TextField fx:id="hourInput2"/>
+        <Label text="Minute"/>
+        <TextField fx:id="minuteInput2"/>
+        <CheckBox fx:id="dayCheckbox2" text="Wednesday"/>
+    </HBox>
+    <HBox spacing="5.0">
+        <Label text="Hour"/>
+        <TextField fx:id="hourInput3"/>
+        <Label text="Minute"/>
+        <TextField fx:id="minuteInput3"/>
+        <CheckBox fx:id="dayCheckbox3" text="Thursday"/>
+    </HBox>
+    <HBox spacing="5.0">
+        <Label text="Hour"/>
+        <TextField fx:id="hourInput4"/>
+        <Label text="Minute"/>
+        <TextField fx:id="minuteInput4"/>
+        <CheckBox fx:id="dayCheckbox4" text="Friday"/>
+    </HBox>
+    <HBox spacing="5.0">
+        <Label text="Hour"/>
+        <TextField fx:id="hourInput5"/>
+        <Label text="Minute"/>
+        <TextField fx:id="minuteInput5"/>
+        <CheckBox fx:id="dayCheckbox5" text="Saturday"/>
+    </HBox>
+    <HBox spacing="5.0">
+        <Label text="Hour"/>
+        <TextField fx:id="hourInput6"/>
+        <Label text="Minute"/>
+        <TextField fx:id="minuteInput6"/>
+        <CheckBox fx:id="dayCheckbox6" text="Sunday"/>
+    </HBox>
+    <HBox spacing="5.0" alignment="CENTER">
+        <Button fx:id="saveButton" text="Save" onAction="#onSaveClick"/>
+        <Button fx:id="stopButton" text="Stop" onAction="#onStopClick"/>
+    </HBox>
 </VBox>

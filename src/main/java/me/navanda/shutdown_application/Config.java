@@ -29,6 +29,15 @@ public class Config {
 		shutdownTimes.put(6, new int[]{23, 0}); // 11pm on Sunday
 	}
 
+	public static void create() {
+		try (FileWriter writer = new FileWriter(configFile)) {
+			objectMapper.writeValue(writer, Config.class);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
 	public Map<Integer, int[]> getShutdownTimes() {
 		return shutdownTimes;
 	}

@@ -3,13 +3,15 @@ package me.navanda.shutdown_application;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Config {
 	private Map<Integer, int[]> shutdownTimes;
-	private String gameName;
+	private List<String> gameNames;
 
 	private static ObjectMapper objectMapper;
 	private static File configFile;
@@ -18,6 +20,7 @@ public class Config {
 		shutdownTimes = new HashMap<>();
 		objectMapper = new ObjectMapper();
 		configFile = new File("settings.conf");
+		gameNames = new ArrayList<>();
 
 		// Initialize shutdown times for each day of the week
 		shutdownTimes.put(0, new int[]{22, 0}); // 10pm on Monday
@@ -50,12 +53,12 @@ public class Config {
 		shutdownTimes.put(dayOfWeek, shutdownTime);
 	}
 
-	public String getGameName() {
-		return gameName;
+	public List<String> getGameNames() {
+		return gameNames;
 	}
 
-	public void setGameName(String gameName) {
-		this.gameName = gameName;
+	public void setGameNames(List<String> gameNames) {
+		this.gameNames = gameNames;
 	}
 
 

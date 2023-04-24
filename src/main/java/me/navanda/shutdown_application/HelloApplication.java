@@ -32,7 +32,8 @@ public class HelloApplication extends Application {
 		try {
 			config = objectMapper.readValue(configFile, Config.class);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			config.delete();
+			config.create();
 		}
 
 

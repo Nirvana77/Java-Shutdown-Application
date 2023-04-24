@@ -38,6 +38,10 @@ public class Config {
 
 	}
 
+	public static void delete() {
+		configFile.delete();
+	}
+
 	public Map<Integer, int[]> getShutdownTimes() {
 		return shutdownTimes;
 	}

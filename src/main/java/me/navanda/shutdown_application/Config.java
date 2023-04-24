@@ -17,7 +17,7 @@ public class Config {
 	public Config() {
 		shutdownTimes = new HashMap<>();
 		objectMapper = new ObjectMapper();
-		File configFile = new File("settings.conf");
+		configFile = new File("settings.conf");
 
 		// Initialize shutdown times for each day of the week
 		shutdownTimes.put(0, new int[]{22, 0}); // 10pm on Monday

@@ -10,7 +10,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Config {
-	private Map<Integer, int[]> shutdownTimes;
+	private final Map<Integer, int[]> shutdownTimes;
 	private List<String> gameNames;
 
 	private static ObjectMapper objectMapper;
@@ -23,13 +23,13 @@ public class Config {
 		gameNames = new ArrayList<>();
 
 		// Initialize shutdown times for each day of the week
-		shutdownTimes.put(0, new int[]{22, 0}); // 10pm on Monday
-		shutdownTimes.put(1, new int[]{22, 0}); // 10pm on Tuesday
-		shutdownTimes.put(2, new int[]{22, 0}); // 10pm on Wednesday
-		shutdownTimes.put(3, new int[]{22, 0}); // 10pm on Thursday
-		shutdownTimes.put(4, new int[]{23, 0}); // 11pm on Friday
-		shutdownTimes.put(5, new int[]{23, 0}); // 11pm on Saturday
-		shutdownTimes.put(6, new int[]{23, 0}); // 11pm on Sunday
+		shutdownTimes.put(0, new int[]{23, 0}); // 10pm on Sunday
+		shutdownTimes.put(1, new int[]{22, 0}); // 10pm on Monday
+		shutdownTimes.put(2, new int[]{22, 0}); // 10pm on Tuesday
+		shutdownTimes.put(3, new int[]{22, 0}); // 10pm on Wednesday
+		shutdownTimes.put(4, new int[]{22, 0}); // 11pm on Thursday
+		shutdownTimes.put(5, new int[]{23, 0}); // 11pm on Friday
+		shutdownTimes.put(6, new int[]{23, 0}); // 11pm on Saturday
 	}
 
 	public static void create() {

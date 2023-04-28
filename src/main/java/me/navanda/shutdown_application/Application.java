@@ -8,11 +8,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class Application extends javafx.application.Application {
 
-	private static Config config;
+	private Config config;
 	private static ObjectMapper objectMapper;
 	private static File configFile;
 	private static Schedule schedule;
@@ -20,6 +21,32 @@ public class Application extends javafx.application.Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
+		config = new Config();
+		objectMapper = new ObjectMapper();
+		configFile = new File("settings.conf");
+		if (!configFile.exists()) {
+			config.create();
+		}
+
+		try {
+			config = objectMapper.readValue(configFile, Config.class);
+			config.valadate();
+		} catch (IOException e) {
+			config.delete();
+			config.create();
+
+			try {
+				config = objectMapper.readValue(configFile, Config.class);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+
+		schedule = new Schedule(config);
+		scheduleThread = new Thread(schedule);
+		schedule.setOwnThred(scheduleThread);
+		scheduleThread.start();
+
 		FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("hello-view.fxml"));
 		Parent root = fxmlLoader.load();
 		Controller controller = fxmlLoader.getController();
@@ -37,24 +64,6 @@ public class Application extends javafx.application.Application {
 	}
 
 	public static void main(String[] args) {
-		config = new Config();
-		objectMapper = new ObjectMapper();
-		configFile = new File("settings.conf");
-		if (!configFile.exists()) {
-			Config.create();
-		} else {
-			try {
-				config = objectMapper.readValue(configFile, Config.class);
-			} catch (IOException e) {
-				Config.delete();
-				Config.create();
-			}
-		}
-
-		schedule = new Schedule(config);
-		scheduleThread = new Thread(schedule);
-		schedule.setOwnThred(scheduleThread);
-		scheduleThread.start();
 
 		launch();
 	}

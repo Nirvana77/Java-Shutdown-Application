@@ -9,7 +9,7 @@ import java.util.*;
 public class Schedule implements Runnable {
 
 
-	private boolean willShotdown, willDelay, stopFlag;
+	private volatile boolean willShotdown, willDelay, stopFlag;
 	private Thread shutdownThread, ownThread;
 	private final Config config;
 
@@ -65,24 +65,27 @@ public class Schedule implements Runnable {
 		while (!stopFlag) {
 			Date date = new Date();
 			int day = date.getDay();
-			int[] time = config.getShutdownTimes().get(day);
-			if ((time[0] == date.getHours() && time[1] == date.getMinutes()) || willDelay) {
-				willDelay = true;
-				shutdown();
+			Map<Integer, int[]> shutdownTimes = config.getShutdownTimes();
+			if (shutdownTimes != null) {
+				int[] time = shutdownTimes.get(day);
+				if ((time[0] == date.getHours() && time[1] == date.getMinutes()) || willDelay) {
+					willDelay = true;
+					shutdown();
 
-				boolean willNotDelay = true;
-				List<String> programs = loadPrograms();
-				Set<String> excludingPrograms = new HashSet<>(config.getGameNames());
+					boolean willNotDelay = true;
+					List<String> programs = loadPrograms();
+					Set<String> excludingPrograms = new HashSet<>(config.getGameNames());
 
-				for (String program : programs) {
-					if (excludingPrograms.contains(program.toLowerCase())) {
-						willNotDelay = false;
-						break;
+					for (String program : programs) {
+						if (excludingPrograms.contains(program.toLowerCase())) {
+							willNotDelay = false;
+							break;
+						}
 					}
-				}
 
-				if (willNotDelay) {
-					willDelay = false;
+					if (willNotDelay) {
+						willDelay = false;
+					}
 				}
 			}
 		}

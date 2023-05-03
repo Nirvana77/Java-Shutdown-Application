@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+//TODO: Make this a config.properties
 public class Config {
 	private final Map<Integer, int[]> shutdownTimes;
 	private volatile List<String> gameNames;

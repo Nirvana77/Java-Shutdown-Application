@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.*;
 
 public class Schedule implements Runnable {
@@ -14,11 +15,21 @@ public class Schedule implements Runnable {
 	private Shutdown shutdown = null;
 	private final Config config;
 
+	private final Database db;
+
+
 	public Schedule(Config config) {
 		willShutdown = false;
 		stopFlag = false;
 		shutdownThread = null;
 		this.config = config;
+		try {
+			//TODO: Make it a request to the config file to get the values.
+			// As well as make the database encrypted.
+			db = new Database("db.gamingpassestime.com", "5432", "testing", "shutdownTimer", "");
+		} catch (SQLException | ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void shutdown() {

@@ -89,27 +89,27 @@ public class Schedule implements Runnable {
 				}
 			} else if (willShutdown) {
 				try {
-					Thread.sleep(10000); // 1 minute
+					Thread.sleep(1000 * 60); // 1 minute
 				} catch (InterruptedException e) {
 					// handle the exception if needed
 				}
-				startShutdown();
+				delayCheck();
 			}
 		}
 	}
 
 	public void startShutdown() {
 		setWillDelay(true);
-		if (!willShutdown && shutdownThread == null) {
+		if (!willShutdown) {
 			shutdown();
 			willShutdown = true;
 		}
 
-		try {
-			db.log(Database.LogLevel.LOG, "Shutdown awaits");
-		} catch (SQLException ignored) {
-		}
+		delayCheck();
 
+	}
+
+	private void delayCheck() {
 		boolean willNotDelay = true;
 		List<String> programs = loadPrograms();
 		Set<String> excludingPrograms = new HashSet<>(config.getGameNames());
@@ -125,8 +125,8 @@ public class Schedule implements Runnable {
 		if (willNotDelay) {
 			setWillDelay(false);
 		}
-
 	}
+
 
 	private static List<String> loadPrograms() {
 		List<String> programs = new ArrayList<>();

@@ -91,6 +91,11 @@ public class Controller {
 	}
 
 	@FXML
+	protected void onShutdownClick() {
+		application.getSchedule().startShutdown();
+	}
+
+	@FXML
 	protected void onStopClick() {
 		application.getSchedule().shutdown();
 		stage.close();

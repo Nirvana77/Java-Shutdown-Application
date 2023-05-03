@@ -9,50 +9,33 @@ import java.util.*;
 public class Schedule implements Runnable {
 
 
-	private volatile boolean willShotdown, willDelay, stopFlag;
+	private boolean willShotdown, stopFlag, willDelay;
 	private Thread shutdownThread, ownThread;
+	private Shutdown shutdown = null;
 	private final Config config;
 
 	public Schedule(Config config) {
 		willShotdown = false;
-		willDelay = false;
 		stopFlag = false;
 		shutdownThread = null;
 		this.config = config;
+		shutdown = new Shutdown(this);
 	}
 
 	public void shutdown() {
-		shutdownThread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				System.out.println("Shutdown awaits....");
-				while (willDelay) ;
-				//Process process = Runtime.getRuntime().exec("shutdown /s /f /t 0");
-				//process.waitFor();
-				System.out.println("Shutdown!");
-				if (ownThread != null) {
-					try {
-						stopFlag = true;
-						ownThread.join();
-					} catch (InterruptedException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			}
-		});
+		shutdown = new Shutdown(shutdown);
+		shutdownThread = new Thread(shutdown);
 		shutdownThread.start();
 		willShotdown = true;
 	}
 
 	public void cancelShutdown() {
-		if (shutdownThread != null) {
-			shutdownThread.interrupt();
-			try {
-				Process process = Runtime.getRuntime().exec("shutdown /a");
-				process.waitFor();
-			} catch (IOException | InterruptedException e) {
-				e.printStackTrace();
-			}
+		shutdown.exitThread();
+		try {
+			Process process = Runtime.getRuntime().exec("shutdown /a");
+			process.waitFor();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
 		}
 		willShotdown = false;
 	}
@@ -66,29 +49,45 @@ public class Schedule implements Runnable {
 			Date date = new Date();
 			int day = date.getDay();
 			Map<Integer, int[]> shutdownTimes = config.getShutdownTimes();
-			if (shutdownTimes != null) {
+			if (shutdownTimes != null && !willShotdown) {
 				int[] time = shutdownTimes.get(day);
-				if ((time[0] == date.getHours() && time[1] == date.getMinutes()) || willDelay) {
-					willDelay = true;
-					shutdown();
-
-					boolean willNotDelay = true;
-					List<String> programs = loadPrograms();
-					Set<String> excludingPrograms = new HashSet<>(config.getGameNames());
-
-					for (String program : programs) {
-						if (excludingPrograms.contains(program.toLowerCase())) {
-							willNotDelay = false;
-							break;
-						}
-					}
-
-					if (willNotDelay) {
-						willDelay = false;
-					}
+				if (time[0] == date.getHours() && time[1] == date.getMinutes()) {
+					startShutdown();
 				}
+			} else if (willShotdown) {
+				try {
+					Thread.sleep(10000); // 1 minute
+				} catch (InterruptedException e) {
+					// handle the exception if needed
+				}
+				startShutdown();
 			}
 		}
+	}
+
+	public void startShutdown() {
+		setWillDelay(true);
+		if (!willShotdown && shutdownThread == null) {
+			shutdown();
+			willShotdown = true;
+		}
+
+		boolean willNotDelay = true;
+		List<String> programs = loadPrograms();
+		Set<String> excludingPrograms = new HashSet<>(config.getGameNames());
+
+		for (String program : programs) {
+			if (excludingPrograms.contains(program)) {
+				willNotDelay = false;
+				System.out.println(program);
+				break;
+			}
+		}
+
+		if (willNotDelay) {
+			setWillDelay(false);
+		}
+
 	}
 
 	private static List<String> loadPrograms() {
@@ -103,7 +102,9 @@ public class Schedule implements Runnable {
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] split = line.split(" ");
-				programs.add(split[0]);
+				String program = split[0];
+				if (!programs.contains(program))
+					programs.add(program);
 			}
 
 			bufferedReader.close();
@@ -125,5 +126,17 @@ public class Schedule implements Runnable {
 
 	public void stopThread() {
 		stopFlag = true;
+	}
+
+	public synchronized void setWillDelay(boolean willDelay) {
+		this.willDelay = willDelay;
+	}
+
+	public synchronized boolean isWillDelay() {
+		return willDelay;
+	}
+
+	public synchronized void setWillShutdown(boolean willShotdown) {
+		this.willShotdown = willShotdown;
 	}
 }

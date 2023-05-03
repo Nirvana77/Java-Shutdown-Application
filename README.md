@@ -6,10 +6,6 @@ to occur if specific programs are running. The application also has a GUI where 
 shutdown times, as well as start or stop the shutdown scheduler. The application is designed to be user-friendly and
 easy to use.
 
-# Build Instructions
-
-# Installation
-
 # Contribute
 
 1. Fork the repo and create a new branch: `$ git checkout -b name_for_new_branch`.

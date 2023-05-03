@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import me.navanda.shutdown_application.Model.Config;
+import me.navanda.shutdown_application.Model.Schedule;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package me.navanda.shutdown_application;
+package me.navanda.shutdown_application.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;

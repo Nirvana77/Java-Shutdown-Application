@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import me.navanda.shutdown_application.Model.Config;
 
 public class Controller {
 	private Application application;

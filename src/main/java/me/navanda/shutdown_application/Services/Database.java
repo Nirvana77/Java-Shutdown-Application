@@ -1,4 +1,4 @@
-package me.navanda.shutdown_application;
+package me.navanda.shutdown_application.Services;
 
 import java.sql.*;
 

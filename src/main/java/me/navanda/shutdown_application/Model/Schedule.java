@@ -1,4 +1,6 @@
-package me.navanda.shutdown_application;
+package me.navanda.shutdown_application.Model;
+
+import me.navanda.shutdown_application.Services.Database;
 
 import java.io.BufferedReader;
 import java.io.IOException;

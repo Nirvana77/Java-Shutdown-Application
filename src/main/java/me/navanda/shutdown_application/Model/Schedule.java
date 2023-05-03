@@ -45,7 +45,14 @@ public class Schedule implements Runnable {
 	}
 
 	public void shutdown() {
-		shutdown = new Shutdown(shutdown);
+		shutdown = new Shutdown(this, context -> {
+			String[] split = context.split(",");
+			try {
+				db.log(Database.LogLevel.fromString(split[0]), split[1]);
+			} catch (SQLException ignored) {
+			}
+
+		});
 		shutdownThread = new Thread(shutdown);
 		shutdownThread.start();
 		willShutdown = true;

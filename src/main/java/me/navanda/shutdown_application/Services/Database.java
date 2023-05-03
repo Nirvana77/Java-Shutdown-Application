@@ -7,7 +7,20 @@ public class Database {
 	public enum LogLevel {
 		ERROR,
 		LOG,
-		WARNING
+		WARNING;
+
+		public static LogLevel fromString(String str) {
+			switch (str) {
+				case "ERROR":
+					return ERROR;
+				case "LOG":
+					return LOG;
+				case "WARNING":
+					return WARNING;
+				default:
+					throw new IllegalArgumentException("Invalid LogLevel: " + str);
+			}
+		}
 	}
 
 	private final Connection conn;

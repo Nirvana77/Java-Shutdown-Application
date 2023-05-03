@@ -27,6 +27,16 @@ public class Schedule implements Runnable {
 			//TODO: Make it a request to the config file to get the values.
 			// As well as make the database encrypted.
 			db = new Database("db.gamingpassestime.com", "5432", "testing", "shutdownTimer", "");
+			if (!db.tableExists("logs")) {
+				db.executeSQL("" +
+						"CREATE TABLE logs (\n" +
+						"  id SERIAL PRIMARY KEY,\n" +
+						"  log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+						"  log_level VARCHAR(10),\n" +
+						"  message TEXT\n" +
+						");"
+				);
+			}
 		} catch (SQLException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -84,6 +94,11 @@ public class Schedule implements Runnable {
 		if (!willShutdown && shutdownThread == null) {
 			shutdown();
 			willShutdown = true;
+		}
+
+		try {
+			db.log(Database.LogLevel.LOG, "Shutdown awaits");
+		} catch (SQLException ignored) {
 		}
 
 		boolean willNotDelay = true;

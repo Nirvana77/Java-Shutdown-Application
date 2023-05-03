@@ -4,6 +4,12 @@ import java.sql.*;
 
 @SuppressWarnings("unused")
 public class Database {
+	public enum LogLevel {
+		ERROR,
+		LOG,
+		WARNING
+	}
+
 	private final Connection conn;
 
 	public Database(String url, String port, String databaseName, String username, String password) throws SQLException, ClassNotFoundException {
@@ -30,6 +36,18 @@ public class Database {
 			}
 		}
 		return exists;
+	}
+
+	public void log(LogLevel logLevel, String message) throws SQLException {
+		String sql =
+				"INSERT INTO logs (" +
+						"log_time, " +
+						"log_level, " +
+						"message" +
+						")\n" +
+						"VALUES (?, ?, ?);\n";
+
+		executeSQL(sql, new Timestamp(System.currentTimeMillis()), logLevel.name(), message);
 	}
 
 	public Connection getConn() {

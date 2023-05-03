@@ -31,7 +31,7 @@ public class Shutdown implements Runnable {
 		}
 
 		if (willExit) {
-			System.out.println("Shutdown interupted....");
+			System.out.println("Shutdown interrupted....");
 			return;
 		}
 		//Process process = Runtime.getRuntime().exec("shutdown /s /f /t 0");

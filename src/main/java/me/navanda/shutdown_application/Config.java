@@ -34,10 +34,10 @@ public class Config {
 		defaultShutdownTimes.put(4, new int[]{22, 0, 1}); // 11pm on Thursday is ON
 		defaultShutdownTimes.put(5, new int[]{23, 0, 0}); // 11pm on Friday is OFF
 		defaultShutdownTimes.put(6, new int[]{23, 0, 1}); // 11pm on Saturday is ON
-		insertStandarsData();
+		insertStandardData();
 	}
 
-	private void insertStandarsData() {
+	private void insertStandardData() {
 		for (int i = 0; i < defaultShutdownTimes.size(); i++) {
 			int[] arr = shutdownTimes.get(i);
 			if (arr == null)
@@ -58,6 +58,7 @@ public class Config {
 		}
 	}
 
+	//TODO: Add a try statement to solve or detect errors
 	public void delete() {
 		configFile.delete();
 	}
@@ -92,23 +93,22 @@ public class Config {
 		this.gameNames = gameNames;
 	}
 
-	public void setShutdownTimes(Map<Integer, int[]> shutdownTimes) {
-		synchronized (shutdownTimes) {
-			this.shutdownTimes.clear(); // clear the existing map
+	public synchronized void setShutdownTimes(Map<Integer, int[]> shutdownTimes) {
+		this.shutdownTimes.clear(); // clear the existing map
 
-			// iterate over the entries in the input map and copy them to the shutdownTimes map
-			for (Map.Entry<Integer, int[]> entry : shutdownTimes.entrySet()) {
-				Integer dayOfWeek = entry.getKey();
-				int[] shutdownTime = entry.getValue();
+		// iterate over the entries in the input map and copy them to the shutdownTimes map
+		for (Map.Entry<Integer, int[]> entry : shutdownTimes.entrySet()) {
+			Integer dayOfWeek = entry.getKey();
+			int[] shutdownTime = entry.getValue();
 
-				// validate the shutdown time array
-				if (shutdownTime.length != 3) {
-					throw new IllegalArgumentException("Shutdown time array must have length 3");
-				}
-
-				this.shutdownTimes.put(dayOfWeek, Arrays.copyOf(shutdownTime, 3));
+			// validate the shutdown time array
+			if (shutdownTime.length != 3) {
+				throw new IllegalArgumentException("Shutdown time array must have length 3");
 			}
+
+			this.shutdownTimes.put(dayOfWeek, Arrays.copyOf(shutdownTime, 3));
 		}
+
 	}
 
 	public int getHour(int day) {
@@ -134,10 +134,10 @@ public class Config {
 		}
 	}
 
-	public void valadate() {
+	public void validate() {
 		int size = shutdownTimes.size();
 		if (size < DAYSINWEEK) {
-			insertStandarsData();
+			insertStandardData();
 		} else if (size > DAYSINWEEK) {
 			for (int i = DAYSINWEEK; i < size; i++) {
 				shutdownTimes.remove(i);
@@ -154,7 +154,7 @@ public class Config {
 			}
 
 			if (hasRemoved) {
-				valadate();
+				validate();
 				save();
 			}
 		}

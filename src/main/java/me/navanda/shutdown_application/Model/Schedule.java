@@ -1,5 +1,6 @@
 package me.navanda.shutdown_application.Model;
 
+import javafx.scene.control.Alert;
 import me.navanda.shutdown_application.Services.Database;
 
 import java.io.BufferedReader;
@@ -47,6 +48,7 @@ public class Schedule implements Runnable {
 	public void shutdown() {
 		shutdown = new Shutdown(this, context -> {
 			String[] split = context.split(",");
+			System.out.println(context);
 			try {
 				db.log(Database.LogLevel.fromString(split[0]), split[1]);
 			} catch (SQLException ignored) {
@@ -60,12 +62,20 @@ public class Schedule implements Runnable {
 
 	@SuppressWarnings("unused")
 	public void cancelShutdown() {
+		if (!willShutdown)
+			return;
+
 		if (shutdown != null)
 			shutdown.exitThread();
 
 		try {
 			Process process = Runtime.getRuntime().exec("shutdown /a");
 			process.waitFor();
+			Shutdown.showAlert("Warning", "Computers shutdown has been aborted", Alert.AlertType.WARNING);
+			try {
+				db.log(Database.LogLevel.WARNING, "Shutdown has been aborted");
+			} catch (SQLException ignored) {
+			}
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -114,11 +124,13 @@ public class Schedule implements Runnable {
 		List<String> programs = loadPrograms();
 		Set<String> excludingPrograms = new HashSet<>(config.getGameNames());
 
-		for (String program : programs) {
-			if (excludingPrograms.contains(program)) {
-				willNotDelay = false;
-				System.out.println(program);
-				break;
+		if (excludingPrograms.size() != 0) {
+			for (String program : programs) {
+				if (excludingPrograms.contains(program)) {
+					willNotDelay = false;
+					System.out.println(program);
+					break;
+				}
 			}
 		}
 

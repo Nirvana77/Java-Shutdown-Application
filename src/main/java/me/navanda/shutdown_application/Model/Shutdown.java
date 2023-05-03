@@ -1,5 +1,10 @@
 package me.navanda.shutdown_application.Model;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+
+import java.io.IOException;
+
 public class Shutdown implements Runnable {
 	private boolean willExit;
 	private final Schedule schedule;
@@ -34,11 +39,33 @@ public class Shutdown implements Runnable {
 			callback.callback("ERROR,Shutdown interrupted");
 			return;
 		}
-		//Process process = Runtime.getRuntime().exec("shutdown /s /f /t 0");
-		//process.waitFor();
+		showAlert("Warning", "Computer will shutdown in 1 minute", Alert.AlertType.WARNING);
+		try {
+			Process process = Runtime.getRuntime().exec("shutdown /s /f /t 6000");
+			process.waitFor();
+		} catch (InterruptedException e) {
+			try {
+				Runtime.getRuntime().exec("shutdown /a");
+				schedule.setWillShutdown(false);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		callback.callback("LOG,Shutdown!");
-		schedule.setWillShutdown(false);
 
+	}
+
+	public static void showAlert(String title, String message, Alert.AlertType type) {
+		Platform.runLater(() -> {
+			Alert alert = new Alert(type);
+			alert.setTitle(title);
+			alert.setHeaderText(null);
+			alert.setContentText(message);
+			alert.showAndWait();
+		});
 	}
 
 	public void exitThread() {

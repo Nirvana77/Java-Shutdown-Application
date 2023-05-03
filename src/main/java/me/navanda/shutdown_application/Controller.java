@@ -98,8 +98,7 @@ public class Controller {
 
 	@FXML
 	protected void onStopClick() {
-		application.getSchedule().shutdown();
-		stage.close();
+		application.getSchedule().cancelShutdown();
 	}
 
 	@FXML

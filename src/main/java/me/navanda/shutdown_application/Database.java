@@ -7,6 +7,7 @@ public class Database {
 	private final Connection conn;
 
 	public Database(String url, String port, String databaseName, String username, String password) throws SQLException, ClassNotFoundException {
+		password = "Ysos$Gn8JZ"; // TODO: Replace with secure password storage mechanism
 		conn = createConnection(url, port, databaseName, username, password);
 		conn.setAutoCommit(false);  // start transaction
 	}
@@ -14,7 +15,7 @@ public class Database {
 	private Connection createConnection(String url, String port, String databaseName, String username, String password) throws SQLException, ClassNotFoundException {
 		// Set up the database connection
 		Class.forName("org.postgresql.Driver"); // load the driver class into memory
-		return DriverManager.getConnection("jdbc:postgresql://" + url + ":" + port + "/" + databaseName, username, password);
+		return DriverManager.getConnection("jdbc:postgresql://" + url + ":" + port + "/" + databaseName, username, password.equals("") ? null : password);
 	}
 
 	public boolean tableExists(String tableName) throws SQLException {
